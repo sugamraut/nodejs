@@ -1,6 +1,7 @@
 const express = require('express')
 const { users } = require('./model/index')
 const app = express()
+const bcrypt= require('bcrypt')
 
 require("./model/index")
 // const app = require("express")()
@@ -28,7 +29,7 @@ app.post("/register",async(req,res)=>{
     const {username,password, email}=req.body
     await users.create({
         email,
-        password,
+        password :bcrypt.hashSync(password,10),
         username
     })
     res.send("redistered sucessfully")
