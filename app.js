@@ -2,7 +2,8 @@ const express = require('express')
 const { users } = require('./model/index')
 const app = express()
 const bcrypt= require('bcrypt')
-const { where } = require('sequelize')
+const jwt= require('jsonwebtoken')
+//const { where } = require('sequelize')
 
 require("./model/index")
 // const app = require("express")()
@@ -67,6 +68,11 @@ if(data){
     //next password check password
     const isMAtched=bcrypt.compareSync(password,data.password)
     if(isMAtched){
+        const token=jwt.sign({id:data.id},'Raut',{
+            expiresIn:"30d"
+        })
+        res.cookie('jwtToken',token)
+       // console.log(token)
         res.send("Logged in success")
     }else{
         res.send("Invalide password")
