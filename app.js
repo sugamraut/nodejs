@@ -1,8 +1,9 @@
 const express = require('express')
 const { users } = require('./model/index')
 const app = express()
-const bcrypt= require('bcrypt')
-const jwt= require('jsonwebtoken')
+//const bcrypt= require('bcrypt')
+
+const { renderHomepage, renderRegisterpage, renderLoginPage, handelRegister, handelLogin } = require('./controller/authController')
 //const { where } = require('sequelize')
 
 require("./model/index")
@@ -12,14 +13,10 @@ app.set('view engine','ejs')
 app.use(express.urlencoded({extended:true}))//ssr
 app.use(express.json())//external lke react,vue js
 
-app.get('/',(req,res)=>{
-    res.render('home.ejs')
-})
+app.get('/',renderHomepage)
 
 
-app.get("/register",(req,res)=>{
-    res.render("auth/register")
-})
+app.get("/register",renderRegisterpage)
 /**app.get("/user",async(req,res)=>{
  * const data=await users.findAll()
  * res.json({
@@ -27,62 +24,10 @@ app.get("/register",(req,res)=>{
  * })
 }) */
 
-app.post("/register",async(req,res)=>{
-    const {username,password, email}=req.body
-    if(!username||!password||!email){
-        return res.send("please provide userna,email,password")
-    }
-    //client side validation
-    /** const data=await users.findAll({
-        where:{
-            email:email
-        }
-    })
-    if (data.length>0){
-        return res.send("Already registered email")
-    }*/
-    
-    await users.create({
-        email,
-        password :bcrypt.hashSync(password,10),
-        username
-    })
-    res.send("redistered sucessfully")
-})
+app.post("/register",handelRegister)
 
-app.get("/login",(req,res)=>{
-    res.render('auth/login')
-})
-app.post("/login", async (req,res)=>{
-const {email,password}=req.body
-if(!email||!password){
-    return res.send("please provide eamol,password")
-}
-//email check
-const [data]= await users.findAll({
-    where:{
-        email:email
-    }
-})
-if(data){
-    //next password check password
-    const isMAtched=bcrypt.compareSync(password,data.password)
-    if(isMAtched){
-        const token=jwt.sign({id:data.id},'Raut',{
-            expiresIn:"30d"
-        })
-        res.cookie('jwtToken',token)
-       // console.log(token)
-        res.send("Logged in success")
-    }else{
-        res.send("Invalide password")
-    }
-}
-else{
-    res.send("no user with that email")
-}
-
-})
+app.get("/login",renderLoginPage)
+app.post("/login",handelLogin)
 
 
 app.use(express.static('public/css/'))
