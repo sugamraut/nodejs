@@ -8,6 +8,7 @@ const { renderHomepage, renderRegisterpage, renderLoginPage, handelRegister, han
 
 require("./model/index")
 // const app = require("express")()
+const authRoute= require("./routes/authRoute")
 
 app.set('view engine','ejs')
 app.use(express.urlencoded({extended:true}))//ssr
@@ -15,20 +16,7 @@ app.use(express.json())//external lke react,vue js
 
 app.get('/',renderHomepage)
 
-
-app.get("/register",renderRegisterpage)
-/**app.get("/user",async(req,res)=>{
- * const data=await users.findAll()
- * res.json({
- * data
- * })
-}) */
-
-app.post("/register",handelRegister)
-
-app.get("/login",renderLoginPage)
-app.post("/login",handelLogin)
-
+app.use("/",authRoute)
 
 app.use(express.static('public/css/'))
 
