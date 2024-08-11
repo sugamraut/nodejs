@@ -33,8 +33,19 @@ db.sequelize = sequelize;
 // importing model files 
 
 db.users = require("./userModel.js")(sequelize, DataTypes);
-db.blogs=require("./blogModel.js")(sequelize,DataTypes);
+//db.blogs=require("./blogModel.js")(sequelize,DataTypes);
+db.question= require("./questionModel.js")(sequelize, DataTypes);
+db.answers= require("./answerModels.js") (sequelize, DataTypes);
+//foregin key refers for question insclude the id 
+db.users.hasMany(db.question)
+db.question.belongsTo(db.users)
 
+// rlation gor answer table to find the answer of the question
+db.question.hasMany(db.answers)
+db.answers.belongsTo(db.question)
+
+db.users.hasMany(db.answers)
+db.answers.belongsTo(db.users)
 
 db.sequelize.sync({ force: false}).then(() => {
   console.log("yes re-sync done");

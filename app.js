@@ -9,6 +9,7 @@ const { renderHomepage, renderRegisterpage, renderLoginPage, handelRegister, han
 require("./model/index")
 // const app = require("express")()
 const authRoute= require("./routes/authRoute")
+const questionRoute = require("./routes/questionRoute")
 
 app.set('view engine','ejs')
 app.use(express.urlencoded({extended:true}))//ssr
@@ -17,8 +18,11 @@ app.use(express.json())//external lke react,vue js
 app.get('/',renderHomepage)
 
 app.use("/",authRoute)
+app.use("/",questionRoute)
 
 app.use(express.static('public/css/'))
+
+
 
 const PORT = 3000
 app.listen(PORT,()=>{
