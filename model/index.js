@@ -34,15 +34,15 @@ db.sequelize = sequelize;
 
 db.users = require("./userModel.js")(sequelize, DataTypes);
 //db.blogs=require("./blogModel.js")(sequelize,DataTypes);
-db.question= require("./questionModel.js")(sequelize, DataTypes);
+db.questions= require("./questionModel.js")(sequelize, DataTypes);
 db.answers= require("./answerModels.js") (sequelize, DataTypes);
 //foregin key refers for question insclude the id 
-db.users.hasMany(db.question)
-db.question.belongsTo(db.users)
+db.users.hasMany(db.questions)
+db.questions.belongsTo(db.users)
 
 // rlation gor answer table to find the answer of the question
-db.question.hasMany(db.answers)
-db.answers.belongsTo(db.question)
+db.questions.hasMany(db.answers)
+db.answers.belongsTo(db.questions)
 
 db.users.hasMany(db.answers)
 db.answers.belongsTo(db.users)
